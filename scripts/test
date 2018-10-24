@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+
+from plano import *
+
+#ENV["MESSAGING_SERVICE_PORT"] = "5672"
+
+sender = None
+receiver = None
+
+try:
+    call("mvn clean package dependency:copy-dependencies")
+    
+    with working_dir("sender"):
+        with working_env(HTTP_HOST="localhost", HTTP_PORT="8081"):
+            sender = start_process("java -cp \"target/classes:target/dependency/*\" net.example.Sender")
+
+    with working_dir("receiver"):
+        with working_env(HTTP_HOST="localhost", HTTP_PORT="8082"):
+            receiver = start_process("java -cp \"target/classes:target/dependency/*\" net.example.Receiver")
+
+    sleep(1)
+    
+    call("curl -X POST --data \"string=Hello World!\" http://localhost:8081/send")
+    call("curl -X POST http://localhost:8082/receive")
+    call("curl -X POST http://localhost:8082/receive")
+finally:
+    terminate_process(sender)
+    terminate_process(receiver)

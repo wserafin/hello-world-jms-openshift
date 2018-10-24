@@ -6,7 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 @Path("receive")
-public class Receiver {
+public class ReceiverResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     public String receive() {

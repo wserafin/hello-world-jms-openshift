@@ -8,7 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 
 @Path("send")
-public class Sender {
+public class SenderResource {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)

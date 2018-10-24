@@ -32,14 +32,14 @@ public class SenderThread extends Thread {
         if (password == null) password = "example";
 
         String url = String.format("failover:(amqp://%s:%s)", host, port);
-        String address = "example";
+        String address = "example/strings";
 
         Hashtable<Object, Object> env = new Hashtable<Object, Object>();
         env.put("connectionfactory.factory1", url);
 
         InitialContext context = new InitialContext(env);
         ConnectionFactory factory = (ConnectionFactory) context.lookup("factory1");
-        Connection conn = factory.createConnection();
+        Connection conn = factory.createConnection(user, password);
 
         System.out.println(String.format("SENDER: Connecting to '%s'", url));
 

@@ -24,6 +24,17 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>openshift-jms-hello-world-message-consumer</artifactId>
+  <artifactId>openshift-jms-hello-world-sender</artifactId>
   <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-netty-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+    </dependency>
+  </dependencies>
 </project>

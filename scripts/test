@@ -18,11 +18,13 @@ try:
 
     sleep(1)
 
-    call("curl -X POST --data \"string=hello 1\" http://localhost:8081/send")
-    call("curl -X POST --data \"string=hello 2\" http://localhost:8081/send")
-    call("curl -X POST http://localhost:8082/receive")
-    call("curl -X POST http://localhost:8082/receive")
-    call("curl -X POST http://localhost:8082/receive")
+    call("curl -X POST --data \"string=hello 1\" http://localhost:8081/api/send")
+    call("curl -X POST --data \"string=hello 2\" http://localhost:8081/api/send")
+    call("curl -X POST http://localhost:8082/api/receive")
+    call("curl -X POST http://localhost:8082/api/receive")
+    call("curl -X POST http://localhost:8082/api/receive")
+    call("curl http://localhost:8081/api/health")
+    call("curl http://localhost:8082/api/health")
 finally:
     terminate_process(sender)
     terminate_process(receiver)

@@ -3,6 +3,7 @@ package net.example;
 import io.netty.channel.Channel;
 import java.net.URI;
 import java.util.concurrent.LinkedBlockingQueue;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -10,10 +11,10 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.netty.httpserver.NettyHttpContainerProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 
-@Path("receive")
+@Path("/api")
 public class Receiver {
     static final LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
-    
+
     public static void main(String[] args) throws Exception {
         String host = System.getenv("HTTP_HOST");
         String port = System.getenv("HTTP_PORT");
@@ -35,8 +36,16 @@ public class Receiver {
     }
 
     @POST
+    @Path("/receive")
     @Produces(MediaType.TEXT_PLAIN)
     public String receive() {
         return String.format("%s\n", strings.poll());
+    }
+
+    @GET
+    @Path("/health")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String health() {
+        return "OK\n";
     }
 }

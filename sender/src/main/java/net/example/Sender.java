@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.concurrent.LinkedBlockingQueue;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -12,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.netty.httpserver.NettyHttpContainerProvider;
 import org.glassfish.jersey.server.ResourceConfig;
 
-@Path("send")
+@Path("/api")
 public class Sender {
     static final LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
 
@@ -37,10 +38,18 @@ public class Sender {
     }
 
     @POST
+    @Path("/send")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     public String send(@FormParam("string") String string) {
         strings.add(string);
+        return "OK\n";
+    }
+
+    @GET
+    @Path("/health")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String health() {
         return "OK\n";
     }
 }

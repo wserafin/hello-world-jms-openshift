@@ -1,6 +1,6 @@
 # Getting started with Artemis on OpenShift
 
-This guide shows how to send and receive messages using
+This guide shows you how to send and receive messages using
 [Apache Qpid JMS](http://qpid.apache.org/components/jms/index.html)
 and [ActiveMQ Artemis](https://activemq.apache.org/artemis/index.html)
 on [OpenShift](https://www.openshift.com/).  It uses the
@@ -9,7 +9,7 @@ messages.
 
 ## Overview
 
-The example application has three parts.
+The example application has three parts:
 
 * An AMQP 1.0 message broker, Artemis
 
@@ -19,9 +19,9 @@ The example application has three parts.
 
 * A receiver service that exposes another HTTP endpoint, this time one
   that causes it to consume an AMQP message from `example/strings` and
-  convert it back to an HTTP response.
+  convert it to an HTTP response.
 
-The sender and the receiver use the JMS API perform their messaging
+The sender and the receiver use the JMS API to perform their messaging
 tasks.
 
 ## Prerequisites
@@ -30,12 +30,15 @@ tasks.
   [Minishift](https://docs.okd.io/latest/minishift/getting-started/index.html)
   provides a way to run OpenShift in your local environment.
 
-* You must have a project selected in which to deploy the services.
-
 ## Deploying the services on OpenShift
 
-1. If you haven't already, use `git` to clone the example source to
-   your local environment.
+1. Use the `oc new-project` command to create a new namespace for the
+   example services.
+
+        oc new-project hello-world-jms
+
+1. If you haven't already, use `git` to clone the example code to your
+   local environment.
 
         git clone https://github.com/amq-io/hello-world-jms-openshift
 
@@ -84,14 +87,14 @@ are listed on the right side of each service ("application") listed in
 the overview.
 
 To send a message, use the `curl` command.  The value you supply for
-`string` is used as the message payload.
+the `string` field is used as the message payload.
 
     curl -X POST --data "string=Hello!" http://<sender-host>/api/send
 
 If things go as planned, it will return `OK`.  If things go awry, add
 the `-v` flag to see more about what's happening.
 
-To then receive the message back, use the `curl` command again against
+To then receive the string back, use the `curl` command again against
 the receiver.  If no message is available, it will print `null`.
 
     curl -X POST http://<receiver-host>/api/receive

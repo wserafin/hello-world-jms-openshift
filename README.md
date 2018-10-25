@@ -102,7 +102,7 @@ the receiver.  If no message is available, it will print `null`.
 Upon success, you should see the message you sent echoed back in the
 response.  Here's some sample output from a few operations:
 
-```shell
+```console
 $ curl -X POST --data "string=hello 1" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
 OK
 $ curl -X POST --data "string=hello 2" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send

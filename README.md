@@ -1,8 +1,11 @@
 # Getting started with Artemis on OpenShift
 
-This guide shows how to send and receive messages using JMS and
-ActiveMQ Artemis on OpenShift.  It uses the AMQP 1.0 message protocol
-to send and receive messages.
+This guide shows how to send and receive messages using
+[Apache Qpid JMS](http://qpid.apache.org/components/jms/index.html)
+and [ActiveMQ Artemis](https://activemq.apache.org/artemis/index.html)
+on [OpenShift](https://www.openshift.com/).  It uses the
+[AMQP 1.0](http://www.amqp.org/) message protocol to send and receive
+messages.
 
 ## Overview
 
@@ -113,8 +116,10 @@ Here we take a closer look at how the code works.
 
 ### Dependencies
 
-This example uses the Apache Qpid JMS implementation.  To add Qpid JMS
-your own project, use the following coordinates in your `pom.xml` file:
+This example uses the
+[Apache Qpid implementation](http://qpid.apache.org/components/jms/index.html)
+of the JMS API.  To add Qpid JMS your own project, use the following
+coordinates in your `pom.xml` file:
 
 ```xml
 <dependency>
@@ -145,7 +150,7 @@ System.out.println(String.format("SENDER: Connecting to '%s'", url));
 conn.start();
 ```
 
-_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/SenderMessagingThread.java#L34)_
+_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/SenderMessagingThread.java#L42)_
 
 JMS uses a connection URI to configure new connections.  See the
 [Qpid JMS docs](http://qpid.apache.org/releases/qpid-jms-0.37.0/docs/index.html#connection-uri)
@@ -179,13 +184,14 @@ while (true) {
 }
 ```
 
-_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/SenderMessagingThread.java#L49)_
+_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/SenderMessagingThread.java#L65)_
 
 ### Receiving messages
 
 The receiver consumes messages from the `example/strings` queue on the
-broker and places them on another in-memory queue (here
-`Receiver.strings`) for the `/api/receive` endpoint to draw from.
+broker and places them on another in-memory queue (here referenced
+using `Receiver.strings`) for the `/api/receive` endpoint to draw
+from.
 
 ```java
 Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -208,4 +214,12 @@ while (true) {
 }
 ```
 
-_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/receiver/src/main/java/net/example/ReceiverMessagingThread.java#L49)_
+_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/receiver/src/main/java/net/example/ReceiverMessagingThread.java#L62)_
+
+## More information
+
+* [AMQP](http://www.amqp.org/)
+* [Apache ActiveMQ Artemis](https://activemq.apache.org/artemis/index.html)
+* [Apache Qpid JMS](http://qpid.apache.org/components/jms/index.html)
+* [JMS API reference](https://docs.oracle.com/javaee/7/api/index.html?javax/jms/package-summary.html)
+* [OpenShift](https://www.openshift.com/)

@@ -64,7 +64,8 @@ tasks.
         oc new-app --template=hello-world-jms-receiver
 
 1. Use your browser to check the status of your services.  You should
-   see three applications, each with one pod.
+   see three services ("applications") in the overview, each with one
+   pod.
 
 ## Exercising the application
 
@@ -95,17 +96,116 @@ the receiver.  If no message is available, it will print `null`.
 Upon success, you should see the message you sent echoed back in the
 response.  Here's some sample output from a few operations:
 
-    $ curl -X POST --data "string=hello 1" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
-    OK
-    $ curl -X POST --data "string=hello 2" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
-    OK
-    $ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
-    hello 1
-    $ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
-    hello 2 
+```shell
+$ curl -X POST --data "string=hello 1" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
+OK
+$ curl -X POST --data "string=hello 2" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
+OK
+$ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
+hello 1
+$ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
+hello 2
+```
 
 ## Exploring the example code
 
 Here we take a closer look at how the code works.
 
-XXX
+### Dependencies
+
+This example uses the Apache Qpid JMS implementation.  To add Qpid JMS
+your own project, use the following coordinates in your `pom.xml` file:
+
+```xml
+<dependency>
+  <groupId>org.apache.qpid</groupId>
+  <artifactId>qpid-jms-client</artifactId>
+  <version>0.37.0</version>
+</dependency>
+```
+
+### Establishing connections
+
+The sender and receiver services contain essentially identical code
+for making a connection to the broker:
+
+```java
+String url = String.format("failover:(amqp://%s:%s)", host, port);
+String address = "example/strings";
+
+Hashtable<Object, Object> env = new Hashtable<Object, Object>();
+env.put("connectionfactory.factory1", url);
+
+InitialContext context = new InitialContext(env);
+ConnectionFactory factory = (ConnectionFactory) context.lookup("factory1");
+Connection conn = factory.createConnection(user, password);
+
+System.out.println(String.format("SENDER: Connecting to '%s'", url));
+
+conn.start();
+```
+
+_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/SenderMessagingThread.java#L34)_
+
+JMS uses a connection URI to configure new connections.  See the
+[Qpid JMS docs](http://qpid.apache.org/releases/qpid-jms-0.37.0/docs/index.html#connection-uri)
+for more information about the syntax and options.
+
+### Sending messages
+
+When a user posts a new string to the `/api/send` endpoint, the string
+is placed on in-memory queue, `Sender.strings` below.  The
+`SenderMessagingThread` class then takes the string, converts it to a
+message, and sends it to the `example/strings` queue on the broker.
+
+```java
+Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+Queue queue = session.createQueue(address);
+MessageProducer producer = session.createProducer(queue);
+
+/* ... */
+
+while (true) {
+    try {
+        String string = Sender.strings.take();
+        TextMessage message = session.createTextMessage(string);
+
+        producer.send(message);
+
+        System.out.println(String.format("SENDER: Sent message '%s'", string));
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/SenderMessagingThread.java#L49)_
+
+### Receiving messages
+
+The receiver consumes messages from the `example/strings` queue on the
+broker and places them on another in-memory queue (here
+`Receiver.strings`) for the `/api/receive` endpoint to draw from.
+
+```java
+Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+Queue queue = session.createQueue(address);
+MessageConsumer consumer = session.createConsumer(queue);
+
+/* ... */
+
+while (true) {
+    try {
+        TextMessage message = (TextMessage) consumer.receive();
+        String string = message.getText();
+
+        Receiver.strings.add(string);
+
+        System.out.println(String.format("RECEIVER: Received message '%s'", string));
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/receiver/src/main/java/net/example/ReceiverMessagingThread.java#L49)_

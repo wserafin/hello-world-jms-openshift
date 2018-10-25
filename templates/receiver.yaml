@@ -141,3 +141,15 @@ objects:
       port: 8080
     selector:
       app: hello-world-jms-receiver
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: hello-world-jms-receiver
+    name: receiver
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: hello-world-jms-receiver

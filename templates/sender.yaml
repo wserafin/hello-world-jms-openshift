@@ -146,7 +146,7 @@ objects:
   metadata:
     labels:
       app: hello-world-jms-sender
-    name: frontend
+    name: sender
   spec:
     port:
       targetPort: 8080

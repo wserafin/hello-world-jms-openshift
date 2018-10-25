@@ -112,8 +112,6 @@ hello 2
 
 ## Exploring the example code
 
-Here we take a closer look at how the code works.
-
 ### Dependencies
 
 This example uses the
@@ -128,6 +126,34 @@ coordinates in your `pom.xml` file:
   <version>0.37.0</version>
 </dependency>
 ```
+
+### HTTP endpoints
+
+The sender and receiver use JAX-RS to expose their (very simple!)
+APIs.  The lifecycle of these HTTP operations is out of sync with that
+of the long-lived messaging connections, so in-memory queues are used
+to communicate between the threads handling HTTP requests and the ones
+processing AMQP messages.
+
+For example, this is how the send endpoint stores strings for use by
+the sender messaging thread:
+
+```java
+static final LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
+
+/* ... */
+
+@POST
+@Path("/send")
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+@Produces(MediaType.TEXT_PLAIN)
+public String send(@FormParam("string") String string) {
+    strings.add(string);
+    return "OK\n";
+}
+```
+
+_From [Sender.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/sender/src/main/java/net/example/Sender.java#L45)_
 
 ### Establishing connections
 
@@ -159,7 +185,7 @@ for more information about the syntax and options.
 ### Sending messages
 
 When a user posts a new string to the `/api/send` endpoint, the string
-is placed on in-memory queue, `Sender.strings` below.  The
+is placed on an in-memory queue, `Sender.strings` below.  The
 `SenderMessagingThread` class then takes the string, converts it to a
 message, and sends it to the `example/strings` queue on the broker.
 

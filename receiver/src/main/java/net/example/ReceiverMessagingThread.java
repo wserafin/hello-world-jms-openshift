@@ -9,7 +9,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 
-public class ReceiverThread extends Thread {
+public class ReceiverMessagingThread extends Thread {
     public void run() {
         while (true) {
             try {

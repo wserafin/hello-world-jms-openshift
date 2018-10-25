@@ -27,7 +27,7 @@ public class Sender {
         URI uri = URI.create(String.format("http://%s:%s/", host, port));
         ResourceConfig rc = new ResourceConfig(Sender.class);
         Channel server = NettyHttpContainerProvider.createHttp2Server(uri, rc, null);
-        SenderThread thread = new SenderThread();
+        SenderMessagingThread thread = new SenderMessagingThread();
 
         try {
             thread.start();

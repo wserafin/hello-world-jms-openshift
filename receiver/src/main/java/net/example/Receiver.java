@@ -25,7 +25,7 @@ public class Receiver {
         URI uri = URI.create(String.format("http://%s:%s/", host, port));
         ResourceConfig rc = new ResourceConfig(Receiver.class);
         Channel server = NettyHttpContainerProvider.createHttp2Server(uri, rc, null);
-        ReceiverThread thread = new ReceiverThread();
+        ReceiverMessagingThread thread = new ReceiverMessagingThread();
 
         try {
             thread.start();

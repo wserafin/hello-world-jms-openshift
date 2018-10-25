@@ -71,8 +71,8 @@ tasks.
 The application exposes two HTTP endpoints, one for sending messages
 and one for receiving them.
 
-        http://<sender-host>/api/send
-        http://<receiver-host>/api/receive
+    http://<sender-host>/api/send
+    http://<receiver-host>/api/receive
 
 The `<sender-host>` and `<receiver-host>` values vary with each
 deployment.  Use the web interface to find the precise values.  They
@@ -82,7 +82,7 @@ the overview.
 To send a message, use the `curl` command.  The value you supply for
 `string` is used as the message payload.
 
-        curl -X POST --data "string=Hello!" http://<sender-host>/api/send
+    curl -X POST --data "string=Hello!" http://<sender-host>/api/send
 
 If things go as planned, it will return `OK`.  If things go awry, add
 the `-v` flag to see more about what's happening.
@@ -90,20 +90,22 @@ the `-v` flag to see more about what's happening.
 To then receive the message back, use the `curl` command again against
 the receiver.  If no message is available, it will print `null`.
 
-        curl -X POST http://<receiver-host>/api/receive
+    curl -X POST http://<receiver-host>/api/receive
 
 Upon success, you should see the message you sent echoed back in the
 response.  Here's some sample output from a few operations:
 
-$ curl -X POST --data "string=hello 1" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
-OK
-$ curl -X POST --data "string=hello 2" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
-OK
-$ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
-hello 1
-$ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
-hello 2
+    $ curl -X POST --data "string=hello 1" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
+    OK
+    $ curl -X POST --data "string=hello 2" http://sender-t2.6923.rh-us-east-1.openshiftapps.com/api/send
+    OK
+    $ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
+    hello 1
+    $ curl -X POST http://receiver-t2.6923.rh-us-east-1.openshiftapps.com/api/receive
+    hello 2 
 
 ## Exploring the example code
+
+Here we take a closer look at how the code works.
 
 XXX

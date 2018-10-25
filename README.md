@@ -112,7 +112,7 @@ hello 2
 
 ## Exploring the example code
 
-### Dependencies
+### Maven coordinates
 
 This example uses the
 [Apache Qpid implementation](http://qpid.apache.org/components/jms/index.html)

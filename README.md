@@ -89,7 +89,7 @@ the overview.
 To send a message, use the `curl` command.  The value you supply for
 the `string` field is used as the message payload.
 
-    curl -X POST --data "string=Hello!" http://<sender-host>/api/send
+    curl -X POST --data "string=hello" http://<sender-host>/api/send
 
 If things go as planned, it will return `OK`.  If things go awry, add
 the `-v` flag to see more about what's happening.

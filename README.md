@@ -243,7 +243,7 @@ while (true) {
 }
 ```
 
-_From [SenderMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/receiver/src/main/java/net/example/ReceiverMessagingThread.java#L62)_
+_From [ReceiverMessagingThread.java](https://github.com/amq-io/hello-world-jms-openshift/blob/master/receiver/src/main/java/net/example/ReceiverMessagingThread.java#L62)_
 
 ## More information
 

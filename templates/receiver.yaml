@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Template
 metadata:
+  labels:
+    app: hello-world-jms-receiver
   name: hello-world-jms-receiver
 parameters:
   - name: SOURCE_REPOSITORY_URL
@@ -18,12 +20,21 @@ parameters:
     displayName: Source Directory
     value: receiver
     required: true
+  - name: ARTIFACT_COPY_ARGS
+    description: Syntax to be used to copy uberjar files to the target directory
+    displayName: Copy Args
+    value: '*-jar-with-dependencies.jar'
+    required: true
   - name: GITHUB_WEBHOOK_SECRET
     description: A secret string used to configure the GitHub webhook.
     displayName: GitHub Webhook Secret
     required: true
     from: '[a-zA-Z0-9]{40}'
     generate: expression
+  - name: MAVEN_MIRROR_URL
+    description: Maven Nexus Repository to be used during build phase
+    displayName:
+    required: false
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -61,7 +72,6 @@ objects:
       git:
         uri: ${SOURCE_REPOSITORY_URL}
         ref: ${SOURCE_REPOSITORY_REF}
-      contextDir: ${SOURCE_REPOSITORY_DIR}
       type: Git
     strategy:
       sourceStrategy:
@@ -69,6 +79,15 @@ objects:
           kind: ImageStreamTag
           name: runtime-hello-world-jms-receiver:latest
         incremental: true
+        env:
+        - name: MAVEN_ARGS_APPEND
+          value: "--projects ${SOURCE_REPOSITORY_DIR}"
+        - name: ARTIFACT_DIR
+          value: "${SOURCE_REPOSITORY_DIR}/target"
+        - name: MAVEN_MIRROR_URL
+          value: "${MAVEN_MIRROR_URL}"
+        - name: ARTIFACT_COPY_ARGS
+          value: "${ARTIFACT_COPY_ARGS}"
       type: Source
     triggers:
     - github:

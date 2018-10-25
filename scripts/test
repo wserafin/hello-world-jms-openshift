@@ -8,18 +8,16 @@ sender = None
 receiver = None
 
 try:
-    call("mvn clean package dependency:copy-dependencies")
-    
-    with working_dir("sender"):
-        with working_env(HTTP_HOST="localhost", HTTP_PORT="8081"):
-            sender = start_process("java -cp \"target/classes:target/dependency/*\" net.example.Sender")
+    call("mvn clean package")
 
-    with working_dir("receiver"):
-        with working_env(HTTP_HOST="localhost", HTTP_PORT="8082"):
-            receiver = start_process("java -cp \"target/classes:target/dependency/*\" net.example.Receiver")
+    with working_env(HTTP_HOST="localhost", HTTP_PORT="8081"):
+        sender = start_process("java -jar sender/target/hello-world-jms-openshift-sender-1.0.0-SNAPSHOT-jar-with-dependencies.jar")
+
+    with working_env(HTTP_HOST="localhost", HTTP_PORT="8082"):
+        receiver = start_process("java -jar receiver/target/hello-world-jms-openshift-receiver-1.0.0-SNAPSHOT-jar-with-dependencies.jar")
 
     sleep(1)
-    
+
     call("curl -X POST --data \"string=hello 1\" http://localhost:8081/send")
     call("curl -X POST --data \"string=hello 2\" http://localhost:8081/send")
     call("curl -X POST http://localhost:8082/receive")

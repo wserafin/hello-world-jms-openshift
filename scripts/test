@@ -4,6 +4,8 @@ from plano import *
 
 #ENV["MESSAGING_SERVICE_PORT"] = "5672"
 
+enable_logging(level="warn")
+
 sender = None
 receiver = None
 
@@ -18,13 +20,13 @@ try:
 
     sleep(1)
 
-    call("curl -X POST --data \"string=hello 1\" http://localhost:8081/api/send")
-    call("curl -X POST --data \"string=hello 2\" http://localhost:8081/api/send")
-    call("curl -X POST http://localhost:8082/api/receive")
-    call("curl -X POST http://localhost:8082/api/receive")
-    call("curl -X POST http://localhost:8082/api/receive")
-    call("curl http://localhost:8081/api/health")
-    call("curl http://localhost:8082/api/health")
+    call("curl -X POST -d \"hello 1\" -H \"Content-type: text/plain\" http://localhost:8081/api/send", quiet=True)
+    call("curl -X POST -d \"hello 2\" -H \"Content-type: text/plain\" http://localhost:8081/api/send", quiet=True)
+    call("curl -X POST http://localhost:8082/api/receive", quiet=True)
+    call("curl -X POST http://localhost:8082/api/receive", quiet=True)
+    call("curl -X POST http://localhost:8082/api/receive", quiet=True)
+    call("curl http://localhost:8081/api/health", quiet=True)
+    call("curl http://localhost:8082/api/health", quiet=True)
 finally:
     terminate_process(sender)
     terminate_process(receiver)

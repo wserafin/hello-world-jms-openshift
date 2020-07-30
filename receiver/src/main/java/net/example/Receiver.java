@@ -55,10 +55,10 @@ public class Receiver {
         String user = System.getenv("MESSAGING_SERVICE_USER");
         String password = System.getenv("MESSAGING_SERVICE_PASSWORD");
 
-        if (host == null) host = "localhost";
+        if (host == null) host = "ex-aao-amqp-0-svc";
         if (port == null) port = "5672";
-        if (user == null) user = "example";
-        if (password == null) password = "example";
+        //if (user == null) user = "example";
+        //if (password == null) password = "example";
 
         String url = String.format("failover:(amqp://%s:%s)", host, port);
         String address = "example/strings";

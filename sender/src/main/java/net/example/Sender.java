@@ -75,7 +75,7 @@ public class Sender {
 
         log.info("SENDER: Connecting to '{}'", url);
         log.info("Sender: User '{}'", user);
-        log.info("Sender: Password'{}'", passowrd);
+        log.info("Sender: Password'{}'", passoword);
 
         conn.start();
 
@@ -84,6 +84,7 @@ public class Sender {
             Queue queue = session.createQueue(address);
             producer = session.createProducer(queue);
         }
+        log.info("SENDER: Connected");
     }
 
     @POST

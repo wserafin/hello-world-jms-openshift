@@ -73,9 +73,7 @@ public class Sender {
         ConnectionFactory factory = (ConnectionFactory) context.lookup("factory1");
         Connection conn = factory.createConnection(user, password);
 
-        log.info("SENDER: Connecting to '{}'", url);
-        log.info("Sender: User '{}'", user);
-        log.info("Sender: Password'{}'", password);
+        log.info("SENDER: Connecting to '{}'", url)
 
         conn.start();
 
@@ -113,7 +111,6 @@ public class Sender {
     @Path("/health")
     @Produces(MediaType.TEXT_PLAIN)
     public String health() {
-        log.info("Health API call");
         return "OK\n";
     }
 }

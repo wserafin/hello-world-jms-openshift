@@ -60,8 +60,8 @@ public class Sender {
 
         if (host == null) host = "ex-aao-amqp-0-svc";
         if (port == null) port = "5672";
-        if (user == null) user = "usL5Si3";
-        if (password == null) password = "xLJBhFv9";
+        if (user == null) user = "example";
+        if (password == null) password = "example";
 
         String url = String.format("failover:(amqp://%s:%s)", host, port);
         String address = "example/strings";
@@ -74,6 +74,8 @@ public class Sender {
         Connection conn = factory.createConnection(user, password);
 
         log.info("SENDER: Connecting to '{}'", url);
+        log.info("Sender: User '{]'", user);
+        log.info("Sender: Password'{}'", passowrd);
 
         conn.start();
 
@@ -90,7 +92,7 @@ public class Sender {
     @Produces(MediaType.TEXT_PLAIN)
     public String send(String text) {
         TextMessage message;
-
+        log.info("Send Message '{}", text );
         try {
             synchronized (this) {
                 message = session.createTextMessage(text);

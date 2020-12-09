@@ -75,7 +75,7 @@ public class Sender {
 
         log.info("SENDER: Connecting to '{}'", url);
         log.info("Sender: User '{}'", user);
-        log.info("Sender: Password'{}'", passoword);
+        log.info("Sender: Password'{}'", password);
 
         conn.start();
 

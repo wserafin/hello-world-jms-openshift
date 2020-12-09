@@ -113,6 +113,7 @@ public class Sender {
     @Path("/health")
     @Produces(MediaType.TEXT_PLAIN)
     public String health() {
+        log.info("Health API call");
         return "OK\n";
     }
 }

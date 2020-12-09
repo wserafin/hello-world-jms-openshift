@@ -74,7 +74,7 @@ public class Sender {
         Connection conn = factory.createConnection(user, password);
 
         log.info("SENDER: Connecting to '{}'", url);
-        log.info("Sender: User '{]'", user);
+        log.info("Sender: User '{}'", user);
         log.info("Sender: Password'{}'", passowrd);
 
         conn.start();
